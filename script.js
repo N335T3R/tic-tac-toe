@@ -14,45 +14,79 @@ const board = (function() {
                 this.board.push(cell);
             }
         },
-        selectCell: function(board) {
+        selectCell: function(player) {
             this.board.forEach(cell => {
                 cell.addEventListener('click', () => {
                     // return index of selected cell
                     // remove eventListeners
-                    return cell;
+                    this.isCellEligible(cell, player);
                 });
             });
         },
-        isCellEligible: function (cell) {
-            if (this.occupiedCells.includes(cell)) return false;
-            else return cell;
+        isCellEligible: function (cell, player) {
+
+            if (this.occupiedCells.includes(cell)) {
+                console.log('Cell already captured. Choose again.');
+                this.selectCell(player);
+            }
+            else this.placeMarker(cell, player);
         },
         // accepts return value of
         // this.isCellEligible() if return !== false
-        placeMarker: function (cell, marker) {
+        placeMarker: function (cell, player) {
+            // if cell === false, this.selectCell()
             const ps = Array.from(document.getElementsByClassName('marker-text'));
-            ps[this.board.indexOf(cell)].innerText = `${marker}`;
+            ps[this.board.indexOf(cell)].innerText = `${player.marker}`;
             this.occupiedCells.push(cell);
-            console.log(this.occupiedCells);
+
+            return cell;
+            // Return value?
+            // Add argument "player"?
+            // push eligible cell to player.occupiedCells?
         }
     }
 })();
 
-const game = (function(board,) {
-    this.board = board;
-})();
-
-
-
-board.initBoard(document.getElementById('board'));
-const player1 = createPlayer('anthony', 'x');
-board.selectCell();
-console.log(player1, board);
 
 
 // Functions & Factories
 function createPlayer(name, marker) {
-    return { name, 
-        marker,};
+    return { name,
+        marker,
+        occupiedCells: []
+    };
 }
+
+function createGame(board, player1, player2) {
+    return {
+        board,
+        player1,
+        player2,
+        takeTurn: function(player) {
+            // alert('Choose a cell');
+
+            const cell = this.board.selectCell(player);
+            console.log(cell);
+        },
+        checkWin: function(player) {
+            // Check for a win after each turn
+        }
+    }
+}
+
+
+
+
+// Execution
+const player1 = createPlayer('anthony', 'x');
+const player2 = createPlayer('RJ', "O");
+board.initBoard(document.getElementById('board'));
+const game = createGame(board, player1, player2);
+
+game.takeTurn(player1);
+
+console.log(player1, board, game);
+
+
+
 
