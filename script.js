@@ -14,36 +14,51 @@ const board = (function() {
                 this.board.push(cell);
             }
         },
-        selectCell: function(player) {
-            this.board.forEach(cell => {
-                cell.addEventListener('click', () => {
-                    // return index of selected cell
-                    // remove eventListeners
-                    this.isCellEligible(cell, player);
-                });
+        handleClick: function(event) {
+            const cell = event.target;
+
+            this.board.forEach(square => {
+                square.removeEventListener('click', this.boundHandleClick);
+            });
+
+            this.isCellEligible(cell);
+        },
+        selectCell: function() {
+            // must bind "this" to current object,
+            // otherwise when eventListener is added,
+            // "this" will become event object
+            this.boundHandleClick = this.handleClick.bind(this);
+
+            this.board.forEach(square => {
+                square.addEventListener('click', this.boundHandleClick);
             });
         },
-        isCellEligible: function (cell, player) {
+        isCellEligible: function (cell) {
 
             if (this.occupiedCells.includes(cell)) {
                 console.log('Cell already captured. Choose again.');
-                this.selectCell(player);
+                this.selectCell();
             }
-            else this.placeMarker(cell, player);
+            else this.placeMarker(cell);
         },
         // accepts return value of
         // this.isCellEligible() if return !== false
-        placeMarker: function (cell, player) {
+        placeMarker: function (cell) {
+            // GET CURRENT PLAYER
+            // const player = game.currentPlayer;
+            const player = player1;
+
             // if cell === false, this.selectCell()
             const ps = Array.from(document.getElementsByClassName('marker-text'));
             ps[this.board.indexOf(cell)].innerText = `${player.marker}`;
+
             this.occupiedCells.push(cell);
 
             return cell;
             // Return value?
             // Add argument "player"?
             // push eligible cell to player.occupiedCells?
-        }
+        },
     }
 })();
 
