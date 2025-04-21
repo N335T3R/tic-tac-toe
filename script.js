@@ -57,7 +57,26 @@ function createRef(player1, player2, board) {
             
             return Number(str[5]);
         },
-        selectCell: function(e) {
+        checkWin: function(player) {
+            let cells = player.occupiedCells;
+
+            return this.wins.some(win => 
+                win.every(cell => cells.includes(cell)));
+        },
+        declareWin: function(player) {
+            // board highlights winning squares
+            // referee text area congrats winner
+            this.board.cells.forEach(cell => {
+                cell.removeEventListener('click', this.boundtakeTurn);
+            });
+            
+            console.log(`${player.name} wins!`);
+            // OR
+
+            // modal appears & contains congrats
+            // to winner & restart button
+        },
+        takeTurn: function(e) {
             let player;
             const cell = e.target;
             const ind = this.getInd(cell);
@@ -68,30 +87,11 @@ function createRef(player1, player2, board) {
 
             player.occupiedCells.push(ind);
             this.board.placeMarker(cell, player);
-
             this.turns++;
-            console.log(cell, ind, player);
 
             let win = this.checkWin(player);
-
             if (win === true) this.declareWin(player);
             else return 0;
-        },
-        checkWin: function(player) {
-            let cells = player.occupiedCells;
-
-            console.log(cells);
-            return this.wins.some(win => 
-                win.every(cell => cells.includes(cell)));
-        },
-        declareWin: function(player) {
-            // board highlights winning squares
-            // referee text area congrats winner
-            console.log(`${player.name} wins!`);
-            // OR
-
-            // modal appears & contains congrats
-            // to winner & restart button
         }
     }
 }
@@ -105,8 +105,10 @@ const ref = createRef(player1, player2, board)
 function playGame(ref) {
     ref.board.initBoard(document.getElementById('board'));
 
+    ref.boundtakeTurn = ref.takeTurn.bind(ref);
+
     ref.board.cells.forEach(cell => {
-        cell.addEventListener('click', ref.selectCell.bind(ref), { once: true });
+        cell.addEventListener('click', ref.boundtakeTurn, { once: true });
     });
 }
 playGame(ref);
