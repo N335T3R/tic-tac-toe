@@ -18,7 +18,8 @@
     width: 100px;
 }
 .marker-text {
-    font-size: 2rem;
+    user-select: none;
     align-self: center;
     justify-self: center;
+    font-size: 2rem;
 }

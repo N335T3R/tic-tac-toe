@@ -1,0 +1,10 @@
+GAMEPLAY
+1. PLAYER: chooses cell
+2. REFEREE: chosing this cell follows the rules?
+    Yes. Step 3
+    No. Step 1
+3. PLAYER: claims cell 
+4. BOARD: marks cell with player's marker
+5. REFEREE: did player win?
+    Yes. End game & announce winner
+    No. Step 1
