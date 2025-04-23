@@ -14,7 +14,7 @@ h1 {
 h2 {
     text-align: center;
     margin: 1rem;
-}
+} 
 header {
     display: flex;
     justify-content: center;
@@ -28,12 +28,6 @@ header {
 main {
     display: grid;
     justify-content: center;
-}
-.btnDiv {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 1rem;
 }
 .new-game {
     border-radius: 0.35rem;
@@ -61,4 +55,24 @@ main {
     user-select: none;
     justify-self: center;
     font-size: 7rem;
+}
+
+.win-box {
+    justify-items: center;
+
+    justify-self: center;
+    align-self: center;
+    width: 50%;
+    border: none;
+    border-radius: .35rem;
+
+    background-color: black;
+    color: white;
+}
+.win-box::backdrop {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+.new-game {
+    border: none;
+    border-radius: 0;
 }

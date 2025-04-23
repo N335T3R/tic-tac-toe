@@ -29,6 +29,9 @@ const board = (function() {
         placeMarker: function(cell, player) {
             const ps = Array.from(document.getElementsByClassName('marker-text'));
             ps[this.cells.indexOf(cell)].innerText = `${player.marker}`;
+        },
+        deconstruct: function(div) {
+            div.innerHTML = "";
         }
     }
 })();
@@ -51,6 +54,8 @@ function createRef(player1, player2, board) {
             [4, 5, 6],
             [7, 8, 9]
         ],
+        winBox: document.getElementById('win-box'),
+        winDeclaration: document.getElementById('win-declaration'),
         refTalk: document.getElementById('ref-talk'),
         getInd: function(cell) {
             let str = cell.classList[1];
@@ -70,6 +75,9 @@ function createRef(player1, player2, board) {
                 cell.removeEventListener('click', this.boundtakeTurn);
             });
             
+            
+            this.winDeclaration.innerText = `${player.name} wins!`;
+            this.winBox.showModal();
 
             this.refTalk.textContent = `${player.name} wins!`;
             // OR
@@ -108,6 +116,8 @@ function createRef(player1, player2, board) {
 
 
 // execution
+const newGame = document.getElementById('new-game');
+newGame.addEventListener('click', playGame);
 
 
 function playGame() {
@@ -115,12 +125,19 @@ function playGame() {
     const player2 = createPlayer('RJ', "o");
     const ref = createRef(player1, player2, board)
     const refTalk = document.getElementById('ref-talk');
+    const htmlBoard = document.getElementById('board');
 
-    ref.board.initBoard(document.getElementById('board'));
+    ref.winBox.close();
+    ref.board.initBoard(htmlBoard);
+   
+    // clear cells at start of new game
+    const cells = Array.from(document.getElementsByClassName('marker-text'));
+    cells.forEach(cell => {
+        cell.innerText = '';
+    });
+    refTalk.textContent = `${player1.name}'s turn`;
 
     ref.boundtakeTurn = ref.takeTurn.bind(ref);
-
-    refTalk.textContent = `${player1.name}'s turn`;
     ref.board.cells.forEach(cell => {
         cell.addEventListener('click', ref.boundtakeTurn, { once: true });
     });
