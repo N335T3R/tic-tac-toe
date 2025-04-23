@@ -1,18 +1,18 @@
 // player
 function createPlayer(name, marker) {
-    return { name,
+    return { 
+        name,
         marker,
         occupiedCells: [],
     };
 }
 
 
-
 // board
 const board = (function() {
     return {
         cells: [],
-        occupiedCells: [],
+        winCells: [],
         initBoard: function(div) {
             for (let i = 0; i < 9; i++) {
                 const cell = document.createElement('div');
@@ -34,7 +34,6 @@ const board = (function() {
 })();
 
 
-
 // ref
 function createRef(player1, player2, board) {
     return {
@@ -52,6 +51,7 @@ function createRef(player1, player2, board) {
             [4, 5, 6],
             [7, 8, 9]
         ],
+        refTalk: document.getElementById('ref-talk'),
         getInd: function(cell) {
             let str = cell.classList[1];
             
@@ -70,7 +70,8 @@ function createRef(player1, player2, board) {
                 cell.removeEventListener('click', this.boundtakeTurn);
             });
             
-            console.log(`${player.name} wins!`);
+
+            this.refTalk.textContent = `${player.name} wins!`;
             // OR
 
             // modal appears & contains congrats
@@ -80,35 +81,48 @@ function createRef(player1, player2, board) {
             let player;
             const cell = e.target;
             const ind = this.getInd(cell);
-
+            
             // determine player
             if (this.turns % 2 !== 0) player = player1;
             else player = player2;
 
             player.occupiedCells.push(ind);
             this.board.placeMarker(cell, player);
-            this.turns++;
+
 
             let win = this.checkWin(player);
             if (win === true) this.declareWin(player);
-            else return 0;
+            else {
+                this.turns++;
+                // reassign player before reassigning 
+                // text content
+                if (this.turns % 2 !== 0) player = player1;
+                else player = player2;
+    
+                this.refTalk.textContent = `${player.name}'s turn`;
+                return 0;
+            }
         }
     }
 }
 
 
 // execution
-const player1 = createPlayer('anthony', 'x');
-const player2 = createPlayer('RJ', "o");
-const ref = createRef(player1, player2, board)
 
-function playGame(ref) {
+
+function playGame() {
+    const player1 = createPlayer('anthony', 'x');
+    const player2 = createPlayer('RJ', "o");
+    const ref = createRef(player1, player2, board)
+    const refTalk = document.getElementById('ref-talk');
+
     ref.board.initBoard(document.getElementById('board'));
 
     ref.boundtakeTurn = ref.takeTurn.bind(ref);
 
+    refTalk.textContent = `${player1.name}'s turn`;
     ref.board.cells.forEach(cell => {
         cell.addEventListener('click', ref.boundtakeTurn, { once: true });
     });
 }
-playGame(ref);
+playGame();
