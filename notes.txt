@@ -8,3 +8,11 @@ GAMEPLAY
 5. REFEREE: did player win?
     Yes. End game & announce winner
     No. Step 1
+
+
+
+
+    TO-DO: 
+    1. add form dialog and form to ref
+    2. newGame triggers form dialog box
+    3. form submit triggers playGame

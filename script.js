@@ -54,6 +54,8 @@ function createRef(player1, player2, board) {
             [4, 5, 6],
             [7, 8, 9]
         ],
+        // formModal: document.getElementById('form-modal'),
+        // form: document.getElementById('name-form'),
         winBox: document.getElementById('win-box'),
         winDeclaration: document.getElementById('win-declaration'),
         refTalk: document.getElementById('ref-talk'),
@@ -76,10 +78,9 @@ function createRef(player1, player2, board) {
             });
             
             
+            this.refTalk.textContent = "";
             this.winDeclaration.innerText = `${player.name} wins!`;
             this.winBox.showModal();
-
-            this.refTalk.textContent = `${player.name} wins!`;
             // OR
 
             // modal appears & contains congrats
@@ -116,16 +117,13 @@ function createRef(player1, player2, board) {
 
 
 // execution
-const newGame = document.getElementById('new-game');
-newGame.addEventListener('click', playGame);
+function playGame(player1, player2) {
 
-
-function playGame() {
-    const player1 = createPlayer('anthony', 'x');
-    const player2 = createPlayer('RJ', "o");
     const ref = createRef(player1, player2, board)
     const refTalk = document.getElementById('ref-talk');
     const htmlBoard = document.getElementById('board');
+    const newGameBtn = document.getElementById('new-game');
+    newGameBtn.addEventListener('click', newGame);
 
     ref.winBox.close();
     ref.board.initBoard(htmlBoard);
@@ -142,4 +140,27 @@ function playGame() {
         cell.addEventListener('click', ref.boundtakeTurn, { once: true });
     });
 }
-playGame();
+
+function newGame() {
+    const formModal = document.getElementById('form-modal');
+    const form = document.getElementById('name-form');
+    formModal.showModal();
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        let obj = {};
+
+        formData.forEach((value, key) => {
+            obj[key] = value;
+        });
+
+        const player1 = createPlayer(`${obj.player1}`, "X");
+        const player2 = createPlayer(`${obj.player2}`, "O");
+
+        formModal.close();
+        playGame(player1, player2);
+    });
+}
+
+newGame();
