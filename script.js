@@ -24,11 +24,21 @@ const board = (function() {
                 cell.appendChild(markerTextBox);
                 div.appendChild(cell);
                 this.cells.push(cell);
+                this.cells.forEach(cell => {
+                    cell.style.backgroundColor = "white";
+                    cell.style.color = "black";
+                });
             }
         },
         placeMarker: function(cell, player) {
             const ps = Array.from(document.getElementsByClassName('marker-text'));
             ps[this.cells.indexOf(cell)].innerText = `${player.marker}`;
+        },
+        displayWin: function(win) {
+            win.forEach(cell => {
+                this.cells[cell - 1].style.backgroundColor = "black";
+                this.cells[cell - 1].style.color = "white";
+            });
         },
         deconstruct: function(div) {
             div.innerHTML = "";
@@ -60,15 +70,22 @@ function createRef(player1, player2, board) {
         winDeclaration: document.getElementById('win-declaration'),
         refTalk: document.getElementById('ref-talk'),
         getInd: function(cell) {
-            let str = cell.classList[1];
+            const str = cell.classList[1];
             
             return Number(str[5]);
         },
         checkWin: function(player) {
-            let cells = player.occupiedCells;
+            const cells = player.occupiedCells;
 
             return this.wins.some(win => 
                 win.every(cell => cells.includes(cell)));
+        },
+        findWin: function(player) {
+            const cells = player.occupiedCells;
+
+            return this.wins.find(win => 
+                win.every(cell => cells.includes(cell))
+            );
         },
         declareWin: function(player) {
             // board highlights winning squares
@@ -100,7 +117,10 @@ function createRef(player1, player2, board) {
 
 
             let win = this.checkWin(player);
-            if (win === true) this.declareWin(player);
+            if (win === true) {
+                this.board.displayWin(this.findWin(player));
+                this.declareWin(player);
+            }
             else {
                 this.turns++;
                 // reassign player before reassigning 
@@ -118,7 +138,6 @@ function createRef(player1, player2, board) {
 
 // execution
 function playGame(player1, player2) {
-
     const ref = createRef(player1, player2, board)
     const refTalk = document.getElementById('ref-talk');
     const htmlBoard = document.getElementById('board');
@@ -144,6 +163,7 @@ function playGame(player1, player2) {
 function newGame() {
     const formModal = document.getElementById('form-modal');
     const form = document.getElementById('name-form');
+    
     formModal.showModal();
 
     form.addEventListener('submit', (e) => {
