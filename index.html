@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Tic-Tac-Toe ODIN Project</title>
+<script defer src="main.js"></script></head>
+
+
+<body>
+    <header>
+        <h1>Tic-Tac-Toe</h1>
+    </header>
+
+    <dialog class="form-modal" id="form-modal">
+        <h1>NEW GAME</h1>
+        <form class="name-form" id="name-form" action="" method="get">
+            <label for="player1">Player 1 name: </label>
+            <input type="text" name="player1" id="player1">
+
+            <label for="player1">Player 2 name: </label>
+            <input type="text" name="player2" id="player2">
+
+            <button class="start-btn" id="start-btn" type="submit">START</button>
+        </form>
+    </dialog>
+
+    <dialog class="win-box" id="win-box">
+        <h2 id="win-declaration"></h2>
+        <button class="new-game" id="new-game">New Game</button>
+    </dialog>
+
+    <main>
+        <h2 class="ref-talk" id="ref-talk">RJ's Turn</h2>
+        <div class="board" id="board"></div>
+    </main>
+
+    <footer>
+    
+    </footer>
+</body>
+</html>
